@@ -27,24 +27,24 @@ export default {
   },
 
   async register(user: IUser) {
-    try {
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(user.password as string, salt);
-      user.password = hash;
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(user.password as string, salt);
+    user.password = hash;
 
-      const responseData = await store.upsert<IUser>(TABLE, user);
-      responseData.password = undefined;
+    const responseData = await store.upsert<IUser>(TABLE, user);
+    responseData.password = undefined;
 
-      if (!responseData.phoneNumber) throw new Error('Invalid phone number.');
+    if (!responseData.phoneNumber) throw new Error('Invalid phone number.');
+    const verification = await this.sendVerificationCode(responseData.phoneNumber);
 
-      const verification = await twilioClient.verify
-        .services(process.env.TWILIO_VERIFY_SERVICE_SID ?? '')
-        .verifications.create({ to: responseData.phoneNumber, channel: 'sms' });
+    return { user: responseData, token: auth.sign(responseData.toJSON()), verificationStatus: verification.status };
+  },
 
-      return { user: responseData, token: auth.sign(responseData.toJSON()), verificationStatus: verification.status };
-    } catch (error: any) {
-      throw new Error(error?.message);
-    }
+  async sendVerificationCode(phoneNumber: string) {
+    const verification = await twilioClient.verify
+      .services(process.env.TWILIO_VERIFY_SERVICE_SID ?? '')
+      .verifications.create({ to: phoneNumber, channel: 'sms' });
+    return verification;
   },
 
   async verifyPhoneNumber(phoneNumber: string, otp: string, userId: Types.ObjectId) {

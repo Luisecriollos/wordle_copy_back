@@ -109,9 +109,36 @@ const verifyPhone = async (req: Request<any, any, any, { otp: string }>, res: Re
   }
 };
 
+const sendVerificationCode = async (req: Request, res: Response) => {
+  const userPhone = req.user?.phoneNumber;
+
+  if (!userPhone)
+    return response.error(req, res, {
+      message: 'Invalid user.',
+      status: 400,
+    });
+
+  try {
+    const verification = await controller.sendVerificationCode(userPhone);
+
+    return response.success(req, res, {
+      body: {
+        status: verification.status,
+      },
+    });
+  } catch (error: any) {
+    return response.error(req, res, {
+      message: error.message,
+      status: 500,
+      details: '[Verify] Error when sending verification code.',
+    });
+  }
+};
+
 router.route('/profile').get(loggedIn, getProfile).put(loggedIn, updateProfile);
 router.post('/register', register);
 router.post('/login', login);
 router.post('/verify', loggedIn, verifyPhone);
+router.post('/send-verify', loggedIn, sendVerificationCode);
 
 export default router;
