@@ -13,7 +13,7 @@ const opts = {
 export default new JwtStrategy(opts, function (jwtPayload, done) {
   User.findById(
     jwtPayload._id,
-    '_id name email username phoneNumber profileImg',
+    '_id name email username phoneNumber profileImg isVerified',
     function (err: any, user: HydratedDocument<IUser>) {
       if (err) {
         return done(err, false);
@@ -32,7 +32,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, '_id name email username phoneNumber profileImg', (err: any, user: IUser) => {
+  User.findById(id, '_id name email username phoneNumber profileImg isVerified', (err: any, user: IUser) => {
     done(err, user);
   });
 });
