@@ -52,7 +52,7 @@ const login = async (req: Request, res: Response) => {
 const register = async (req: Request, res: Response) => {
   const user: IUser = req.body;
 
-  if (!user.email || !user.password || !user.name) {
+  if (!user.email || !user.password || !user.name || !user.country) {
     res.status(400).json({
       error: 'No ha ingresado los datos correctamente, por favor intente de nuevo.',
     });

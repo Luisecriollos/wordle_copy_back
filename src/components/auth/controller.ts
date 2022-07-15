@@ -4,7 +4,6 @@ import { IUser } from '../../interfaces/auth.js';
 import auth from '../../auth';
 import { E_TABLES } from '../../interfaces/store';
 import twilioClient from '../../config/twilio';
-import response from '../../network/response';
 import { Types } from 'mongoose';
 const TABLE = E_TABLES.USER;
 
@@ -76,7 +75,7 @@ export default {
   },
 
   async upsertRegistry(data: IUser) {
-    const authData: IUser = {
+    const authData: Partial<IUser> = {
       _id: data._id,
     };
 

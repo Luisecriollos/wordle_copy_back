@@ -28,7 +28,7 @@ export default {
 
   upsert<T extends { _id?: string | Types.ObjectId }>(
     table: E_TABLES,
-    data: T,
+    data: Partial<T>,
     populate?: IQueryOptions<T>['populate']
   ): Query<HydratedDocument<T>, any> {
     const Table = TABLE_MAP[table];

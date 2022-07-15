@@ -23,6 +23,11 @@ const userSchema = new Schema<IUser>({
     minLength: 5,
     maxLength: 200,
   },
+  country: {
+    type: String,
+    required: true,
+    minLength: 2,
+  },
   name: {
     type: String,
     required: true,
