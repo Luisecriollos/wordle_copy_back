@@ -16,6 +16,8 @@ import config from './config';
 import './config/db';
 
 import authRoutes from './components/auth/routes';
+import userRoutes from './components/users/routes';
+import roomRoutes from './components/rooms/routes';
 import passportMiddleware from './middlewares/passport';
 import loggedIn from './middlewares/loggedIn';
 
@@ -43,6 +45,8 @@ passport.use(passportMiddleware);
 //Routes
 
 app.use('/auth', authRoutes);
+app.use('/users', loggedIn, userRoutes);
+app.use('/rooms', loggedIn, roomRoutes);
 
 const port = config.api.PORT;
 app.listen(port, () => {
