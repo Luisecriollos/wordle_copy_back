@@ -22,13 +22,11 @@ export default {
   async joinRoom(userId: string, roomCode: string) {
     const room = (await store.list<IRoom>(TABLE, { filter: { code: roomCode } }))[0];
     if (!room) throw new Error(`Room doesn't exist.`);
-    const updatedRoom = await store
-      .upsert<IRoom>(TABLE, {
-        ...room,
-        users: [...(room.users as Types.ObjectId[]), new Types.ObjectId(userId)],
-      })
-      .populate('owner', userFields)
-      .populate('users', userFields);
+    if ((room.users as Types.ObjectId[]).includes(new Types.ObjectId(userId))) return room;
+    const updatedRoom = await store.upsert<IRoom>(TABLE, {
+      _id: room._id,
+      users: [...(room.users as Types.ObjectId[]), new Types.ObjectId(userId)],
+    });
     return updatedRoom;
   },
 
@@ -38,6 +36,7 @@ export default {
     const updatedRoom = await store
       .upsert<IRoom>(TABLE, {
         ...room,
+        _id: room.id,
         users: (room.users as Types.ObjectId[]).filter((user: Types.ObjectId) => user !== new Types.ObjectId(userId)),
       })
       .populate('owner', userFields)

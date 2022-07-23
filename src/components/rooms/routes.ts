@@ -35,7 +35,9 @@ const joinRoom = async (req: Request<{ code: string }>, res: Response) => {
   }
   try {
     const room = await controller.joinRoom(userId, roomCode);
-    return room;
+    return response.success(req, res, {
+      body: room,
+    });
   } catch (error: any) {
     response.error(req, res, {
       details: error.message,
