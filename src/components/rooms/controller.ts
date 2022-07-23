@@ -19,8 +19,9 @@ export default {
       .populate('users', userFields);
   },
 
-  async joinRoom(userId: string, roomId: string) {
-    const room = await store.get<IRoom>(TABLE, roomId);
+  async joinRoom(userId: string, roomCode: string) {
+    const room = (await store.list<IRoom>(TABLE, { filter: { code: roomCode } }))[0];
+    if (!room) throw new Error(`Room doesn't exist.`);
     const updatedRoom = await store
       .upsert<IRoom>(TABLE, {
         ...room,
@@ -31,8 +32,9 @@ export default {
     return updatedRoom;
   },
 
-  async leaveRoom(userId: string, roomId: string) {
-    const room = await store.get<IRoom>(TABLE, roomId);
+  async leaveRoom(userId: string, roomCode: string) {
+    const room = (await store.list<IRoom>(TABLE, { filter: { code: roomCode } }))[0];
+    if (!room) throw new Error(`Room doesn't exist.`);
     const updatedRoom = await store
       .upsert<IRoom>(TABLE, {
         ...room,

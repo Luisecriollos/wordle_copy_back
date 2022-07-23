@@ -24,8 +24,8 @@ const createRoom = async (req: Request<any, any, IRoom>, res: Response) => {
   }
 };
 
-const joinRoom = async (req: Request<{ id: string }>, res: Response) => {
-  const roomId = req.params.id;
+const joinRoom = async (req: Request<{ code: string }>, res: Response) => {
+  const roomCode = req.params.code;
   const userId = req.user?._id.toString();
   if (!userId) {
     return response.error(req, res, {
@@ -34,7 +34,7 @@ const joinRoom = async (req: Request<{ id: string }>, res: Response) => {
     });
   }
   try {
-    const room = await controller.joinRoom(userId, roomId);
+    const room = await controller.joinRoom(userId, roomCode);
     return room;
   } catch (error: any) {
     response.error(req, res, {
@@ -44,7 +44,7 @@ const joinRoom = async (req: Request<{ id: string }>, res: Response) => {
 };
 
 router.post('/', createRoom);
-router.post('/join/:id', joinRoom);
-router.post('/leave/:id', joinRoom);
+router.post('/join/:code', joinRoom);
+router.post('/leave/:code', joinRoom);
 
 export default router;
