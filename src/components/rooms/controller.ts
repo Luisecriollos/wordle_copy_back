@@ -59,7 +59,6 @@ export default {
       })
     )[0];
     if (!room) throw new Error(`Room doesn't exist.`);
-    console.log(room.users.map((usr) => usr._id.toString()).includes(userId));
     if (room.users.map((usr) => usr._id.toString()).includes(userId)) return room;
     const updatedRoom = await store
       .upsert<IRoom>(TABLE, {
