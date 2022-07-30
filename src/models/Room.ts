@@ -13,11 +13,31 @@ const roomSchema = new Schema<IRoom>({
       default: [],
     },
   ],
+  currentPlayer: {
+    type: Schema.Types.ObjectId,
+    ref: 'Users',
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'Users',
   },
+  currentWord: {
+    type: String,
+    default: '',
+  },
+  state: {
+    attempt: {
+      type: Number,
+      default: 0,
+    },
+    letterPosition: {
+      type: Number,
+      default: 0,
+    },
+  },
+  board: [[String]],
   numberOfHits: Number,
+  currentRound: Number,
   rounds: Number,
   timePerRound: Number,
   wordLength: {

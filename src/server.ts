@@ -20,6 +20,8 @@ import userRoutes from './components/users/routes';
 import roomRoutes from './components/rooms/routes';
 import passportMiddleware from './middlewares/passport';
 import loggedIn from './middlewares/loggedIn';
+import { createSocketServer } from './socket-server';
+import { createServer } from 'http';
 
 //Config
 app.use(
@@ -48,7 +50,10 @@ app.use('/auth', authRoutes);
 app.use('/users', loggedIn, userRoutes);
 app.use('/rooms', loggedIn, roomRoutes);
 
+const server = createServer(app);
+createSocketServer(server);
+
 const port = config.api.PORT;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('Server listening in PORT', port);
 });

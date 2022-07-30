@@ -57,6 +57,10 @@ export default {
     return check;
   },
 
+  async getProfile(userId: string) {
+    return store.get<IUser>(TABLE, userId);
+  },
+
   async updateProfile(user: IUser) {
     try {
       const updatedUser = await store.upsert<IUser>(TABLE, user).select('_id email name username profileImg');
