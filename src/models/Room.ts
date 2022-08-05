@@ -6,11 +6,10 @@ const roomSchema = new Schema<IRoom>({
     type: String,
     maxlength: 6,
   },
-  users: [
+  players: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'Users',
-      default: [],
+      user: { type: Schema.Types.ObjectId, ref: 'Users' },
+      score: { type: Number, default: 0 },
     },
   ],
   currentPlayer: {
@@ -24,6 +23,10 @@ const roomSchema = new Schema<IRoom>({
   currentWord: {
     type: String,
     default: '',
+  },
+  started: {
+    type: Boolean,
+    default: false,
   },
   state: {
     attempt: {
